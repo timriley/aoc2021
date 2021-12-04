@@ -1,15 +1,27 @@
 def increases_count(depths = parse_data)
   depths.each_with_index.reduce(0) { |count, (depth, i)|
-    next 0 if i == 0
+    next count if i == 0
     depth > depths[i-1] ? count + 1 : count
   }
 end
 
+def sliding_window_increases_count(depths = parse_data)
+  depths[0..-3].each_with_index.reduce(0) { |count, (depth, i)|
+    next count if i == 0
+
+    curr_window_sum = depths[i..i+2].sum
+    prev_window_sum = depths[i-1..i-1+2].sum
+
+    curr_window_sum > prev_window_sum ? count + 1 : count
+  }
+end
+
 def parse_data(data = DATA)
-  DATA.readlines.map(&:to_i)
+  @data ||= DATA.readlines.map(&:to_i)
 end
 
 puts "Number of depth increases (part 1): #{increases_count}"
+puts "Number of depth increases via sliding windows (part 2): #{sliding_window_increases_count}"
 
 __END__
 127
